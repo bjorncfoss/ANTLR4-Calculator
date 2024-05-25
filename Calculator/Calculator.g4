@@ -11,10 +11,8 @@ options {
 computation : assignment
             | expression
             ;
-
 assignment  : IDENTIFIER '=' expression
             ;
-
 expression  : expression '+' term | expression '-' term | term 
             ;
 term        : term '*' factor | term '/' factor | factor 
@@ -22,6 +20,14 @@ term        : term '*' factor | term '/' factor | factor
 factor      : value | '-' value 
             ;
 value       : '(' expression ')' | NUMBER | IDENTIFIER
+            ;
+fassignment : IDENTIFIER '(' params ')' '=' expression
+            ;
+function    : IDENTIFIER '(' args ')'
+            ;
+params      : IDENTIFIER (',' IDENTIFIER)*
+            ;
+args        : IDENTIFIER (',' expression)*
             ;
 
 /*

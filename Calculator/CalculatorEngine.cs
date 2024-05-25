@@ -2,6 +2,9 @@
 {
     public class CalculatorEngine : CalculatorBaseVisitor<double>
     {
+        // We start by creating a dictionary which will store our variables
+        // For them to later be assigned.
+        private static Dictionary<string, double> storeVariables = new Dictionary<string, double>();
 
         public override double VisitComputation( CalculatorParser.ComputationContext context )
         {
@@ -13,12 +16,19 @@
                 return base.VisitComputation( context );
         }
 
+        // This functions assigns the variables and expressions containing those variables.
         public override double VisitAssignment( CalculatorParser.AssignmentContext context )
         {
-            // 1. DETERMINE THE VARIABLE NAME
-            // 2. DETERMINE THE VALUE OF THE EXPRESSION
-            // 3. STORE THE VALUE IN THE VARIABLE 
-            return base.VisitAssignment( context );
+            // STEP 1: Determine the Variable Name to be assigned
+            var storeVariableNames = context.IDENTIFIER().GetText();
+
+            // STEP 2: Determine the Expression Value
+            var storeValues = Visit(context.expression());
+
+            // STEP 3: Create return statement which stores the value in the assigned variable 
+            storeVariables[storeVariableNames] = storeValues;
+            return storeValues;
+            //return base.VisitAssignment( context );
         }
 
         public override double VisitExpression( CalculatorParser.ExpressionContext context )
@@ -79,7 +89,15 @@
                 else if ( context.IDENTIFIER() != null )
                 {
                     var lexeme = context.IDENTIFIER().GetText();
-                    // RETURN THE CURRENT VALUE OF THE VARIABLE
+
+                    // STEP 4: Returns the current value of the value
+                    // when it's assigned on the prompt
+                    if (storeVariables.ContainsKey(lexeme))
+                    {
+                        if (storeVariables.TryGetValue(lexeme, out var storeValues)) {
+                            return storeValues;
+                        }
+                    }
                 }
             }
             else

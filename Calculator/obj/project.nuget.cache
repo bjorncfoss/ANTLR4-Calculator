@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "iYsoVzyfsyDl13+Hjo4OqE/uYIbGRKtdgVkI43p6xX9kZMLj3wOO8H+4Cm8GC8oL02C5Y8QjQGD4iCyLXTFaKg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\andre\\Source\\Repos\\ANTLR4-Calculator\\Calculator\\Calculator.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\andre\\.nuget\\packages\\antlr4.runtime.standard\\4.13.1\\antlr4.runtime.standard.4.13.1.nupkg.sha512"
+  ],
+  "logs": []
+}
