@@ -1,108 +1,137 @@
-﻿namespace Calculator
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Calculator
 {
     public class CalculatorEngine : CalculatorBaseVisitor<double>
     {
-        // We start by creating a dictionary which will store our variables
-        // For them to later be assigned.
-        private static Dictionary<string, double> storeVariables = new Dictionary<string, double>();
+        // 1. For variable implementation, we start by creating a list
+        private static List<(string Key, double Value)> storeVariables;
 
-        public override double VisitComputation( CalculatorParser.ComputationContext context )
+        // Constructor
+        static CalculatorEngine()
         {
-            if ( context.assignment() != null )
-                return Visit( context.assignment() );
-            else if ( context.expression() != null )
-                return Visit( context.expression() );
-            else
-                return base.VisitComputation( context );
+            storeVariables = new List<(string Key, double Value)>();
         }
 
-        // This functions assigns the variables and expressions containing those variables.
-        public override double VisitAssignment( CalculatorParser.AssignmentContext context )
+        private static bool TryGetVariable(string key, out double value)
         {
-            // STEP 1: Determine the Variable Name to be assigned
+            var variable = storeVariables.FirstOrDefault(x => x.Key == key);
+            if (variable.Key != null)
+            {
+                value = variable.Value;
+                return true;
+            }
+            value = 0.0;
+            return false;
+        }
+
+        private static void SetVariable(string key, double value)
+        {
+            var index = storeVariables.FindIndex(x => x.Key == key);
+            if (index >= 0)
+            {
+                storeVariables[index] = (key, value);
+            }
+            else
+            {
+                storeVariables.Add((key, value));
+            }
+        }
+
+        public override double VisitComputation(CalculatorParser.ComputationContext context)
+        {
+            if (context.assignment() != null)
+                return Visit(context.assignment());
+            else if (context.expression() != null)
+                return Visit(context.expression());
+            else
+                return base.VisitComputation(context);
+        }
+
+        public override double VisitAssignment(CalculatorParser.AssignmentContext context)
+        {
+            // 1.
             var storeVariableNames = context.IDENTIFIER().GetText();
-
-            // STEP 2: Determine the Expression Value
+            // 2.
             var storeValues = Visit(context.expression());
-
-            // STEP 3: Create return statement which stores the value in the assigned variable 
-            storeVariables[storeVariableNames] = storeValues;
+            // 3.
+            SetVariable(storeVariableNames, storeValues);
             return storeValues;
-            //return base.VisitAssignment( context );
         }
 
-        public override double VisitExpression( CalculatorParser.ExpressionContext context )
+        public override double VisitExpression(CalculatorParser.ExpressionContext context)
         {
-            if ( context.ChildCount == 1 )
+            if (context.ChildCount == 1)
             {
-                return Visit( context.term() );
-            }
-            else
-            { 
-                var expression = Visit( context.expression() );
-                var term = Visit( context.term() );
-
-                switch ( context.GetChild(1).GetText() ) 
-                {
-                    case "+": return expression + term;
-                    case "-": return expression - term;
-                }
-            }
-            return base.VisitExpression( context );
-        }
-
-        public override double VisitTerm( CalculatorParser.TermContext context )
-        {
-            if ( context.ChildCount == 1 )
-            {
-                return Visit( context.factor() );
+                return Visit(context.term());
             }
             else
             {
-                var term = Visit( context.term() );
-                var factor = Visit( context.factor() ); 
+                var expression = Visit(context.expression());
+                var term = Visit(context.term());
 
-                switch( context.GetChild(1).GetText() ) 
+                switch (context.GetChild(1).GetText())
                 {
-                    case "*": return term * factor;
-                    case "/": return term / factor;
+                    case "+":
+                        return expression + term;
+                    case "-":
+                        return expression - term;
                 }
             }
-            return base.VisitTerm( context );
+            return base.VisitExpression(context);
         }
 
-        public override double VisitFactor( CalculatorParser.FactorContext context )
+        public override double VisitTerm(CalculatorParser.TermContext context)
         {
-            var value = Visit( context.value() );
-            return context.ChildCount == 1 ? value : - value;
-        }
-
-        public override double VisitValue( CalculatorParser.ValueContext context )
-        {
-            if ( context.ChildCount == 1 )
+            if (context.ChildCount == 1)
             {
-                if ( context.NUMBER() != null )
+                return Visit(context.factor());
+            }
+            else
+            {
+                var term = Visit(context.term());
+                var factor = Visit(context.factor());
+
+                switch (context.GetChild(1).GetText())
+                {
+                    case "*":
+                        return term * factor;
+                    case "/":
+                        return term / factor;
+                }
+            }
+            return base.VisitTerm(context);
+        }
+
+        public override double VisitFactor(CalculatorParser.FactorContext context)
+        {
+            var value = Visit(context.value());
+            return context.ChildCount == 1 ? value : -value;
+        }
+
+        public override double VisitValue(CalculatorParser.ValueContext context)
+        {
+            if (context.ChildCount == 1)
+            {
+                if (context.NUMBER() != null)
                 {
                     var lexeme = context.NUMBER().GetText();
-                    if ( double.TryParse( lexeme, out var value ) ) return value;
+                    if (double.TryParse(lexeme, out var value)) return value;
                 }
-                else if ( context.IDENTIFIER() != null )
+                else if (context.IDENTIFIER() != null)
                 {
                     var lexeme = context.IDENTIFIER().GetText();
-
-                    // STEP 4: Returns the current value of the value
-                    // when it's assigned on the prompt
-                    if (storeVariables.ContainsKey(lexeme))
+                    if (TryGetVariable(lexeme, out var storeValues))
                     {
-                        if (storeVariables.TryGetValue(lexeme, out var storeValues)) {
-                            return storeValues;
-                        }
+                        return storeValues;
                     }
                 }
             }
             else
             {
-                return Visit( context.expression() );
+                return Visit(context.expression());
             }
             return 0.0;
         }
