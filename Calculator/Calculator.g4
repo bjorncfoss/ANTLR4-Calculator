@@ -21,14 +21,6 @@ factor      : value | '-' value
             ;
 value       : '(' expression ')' | NUMBER | IDENTIFIER
             ;
-fassignment : IDENTIFIER '(' params ')' '=' expression
-            ;
-function    : IDENTIFIER '(' args ')'
-            ;
-params      : IDENTIFIER (',' IDENTIFIER)*
-            ;
-args        : IDENTIFIER (',' expression)*
-            ;
 
 /*
 ** Lexer Rules

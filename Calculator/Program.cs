@@ -1,7 +1,7 @@
 ﻿using Antlr4.Runtime;
 using Calculator;
 
-Console.WriteLine( "ANTLR Calculator - Version 1.0" );
+Console.WriteLine( "ANTLR4 Calculator - Version 1.0" );
 
 Console.Write( "> " );
 for ( var buffer = Console.ReadLine() ;

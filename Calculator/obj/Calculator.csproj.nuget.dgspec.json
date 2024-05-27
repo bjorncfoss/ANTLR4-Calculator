@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\andre\\Source\\Repos\\ANTLR4-Calculator\\Calculator\\Calculator.csproj": {}
+    "C:\\Users\\andre\\source\\repos\\ANTLR4-Calculator\\Calculator\\Calculator.csproj": {}
   },
   "projects": {
-    "C:\\Users\\andre\\Source\\Repos\\ANTLR4-Calculator\\Calculator\\Calculator.csproj": {
+    "C:\\Users\\andre\\source\\repos\\ANTLR4-Calculator\\Calculator\\Calculator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\andre\\Source\\Repos\\ANTLR4-Calculator\\Calculator\\Calculator.csproj",
+        "projectUniqueName": "C:\\Users\\andre\\source\\repos\\ANTLR4-Calculator\\Calculator\\Calculator.csproj",
         "projectName": "Calculator",
-        "projectPath": "C:\\Users\\andre\\Source\\Repos\\ANTLR4-Calculator\\Calculator\\Calculator.csproj",
+        "projectPath": "C:\\Users\\andre\\source\\repos\\ANTLR4-Calculator\\Calculator\\Calculator.csproj",
         "packagesPath": "C:\\Users\\andre\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\andre\\Source\\Repos\\ANTLR4-Calculator\\Calculator\\obj\\",
+        "outputPath": "C:\\Users\\andre\\source\\repos\\ANTLR4-Calculator\\Calculator\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\andre\\AppData\\Roaming\\NuGet\\NuGet.Config",
